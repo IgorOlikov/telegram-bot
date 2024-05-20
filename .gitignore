@@ -1,0 +1,6 @@
+docker-compose-prod.yml
+.env
+docker/postgresql
+docker/prod
+.idea
+
