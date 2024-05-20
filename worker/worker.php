@@ -9,6 +9,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 $worker = new Worker();
 
+Worker::$stdoutFile =  __DIR__ . '/log/worker.log';
+
 
 $options = [];
 
