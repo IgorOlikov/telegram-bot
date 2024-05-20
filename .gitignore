@@ -1,6 +1,6 @@
 docker-compose-prod.yml
 .env
-docker/postgresql
-docker/prod
+/docker/postgresql
+/docker/prod
 .idea
-
+/docker/rabbitmq/*

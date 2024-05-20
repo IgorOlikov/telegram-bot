@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
     nginx:
+      container_name: nginx
       build:
         context: docker
         dockerfile: dev/nginx/Dockerfile
@@ -13,6 +14,7 @@ services:
         - postgresql
 
     php-fpm:
+      container_name: fpm
       build:
         context: docker
         dockerfile: dev/php-fpm/Dockerfile
@@ -28,6 +30,7 @@ services:
         - nginx
 
     php-cli:
+      container_name: cli
       build:
         context: docker
         dockerfile: dev/php-cli/Dockerfile
@@ -40,6 +43,7 @@ services:
         POSTGRES_PASSWORD: password
 
     postgresql:
+      container_name: postgresql
       image: postgres:16-alpine3.18
       environment:
         POSTGRES_HOST: postgresql
@@ -51,3 +55,29 @@ services:
       ports:
         - "5432:5432"
 
+    rabbitmq:
+      container_name: rabbitmq
+      image: rabbitmq:3.10.6-management-alpine
+      hostname: my-rabbitmq
+      environment:
+        - RABBITMQ_DEFAULT_USER=admin
+        - RABBITMQ_DEFAULT_PASS=admin
+      volumes:
+        - './docker/rabbitmq:/var/lib/rabbitmq/mnesia'
+      ports:
+        - "5672:5672"
+        - "15672:15672"
+
+
+    worker:
+      container_name: worker
+      build:
+        context: docker
+        dockerfile: dev/worker/Dockerfile
+      volumes:
+        - ./worker:/app
+      environment:
+        - RABBITMQ_DEFAULT_USER=admin
+        - RABBITMQ_DEFAULT_PASS=admin
+      depends_on:
+        - rabbitmq
