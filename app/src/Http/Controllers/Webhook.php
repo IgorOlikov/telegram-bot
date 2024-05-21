@@ -37,7 +37,11 @@ class Webhook extends BaseController
 
 
         $this->bot->onMessage(function (Nutgram $bot) {
-            $bot->sendMessage('You sent a message!');
+
+
+            $chatId = $bot->chatId();
+
+            $bot->sendMessage('You sent a message!' . 'chatId' . $chatId);
 
             $user = $bot->user();
 

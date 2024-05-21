@@ -17,6 +17,7 @@ class MainController extends BaseController
         $pdo = $database->getPdo();
 
 
+        dd($_SERVER);
 
         $response->getBody()->write('hello');
 
