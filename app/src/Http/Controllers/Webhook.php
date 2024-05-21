@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Database\Database;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use SergiX44\Nutgram\Nutgram;
@@ -11,6 +13,7 @@ class Webhook extends BaseController
 {
 
    public function __construct(
+       protected AMQPStreamConnection $rabbitmqConnection,
        Database $database,
        protected Nutgram $bot
    )
@@ -19,18 +22,14 @@ class Webhook extends BaseController
    }
 
 
-    public function handle(Request $request, Response $response): Response
+    public function __invoke(Request $request, Response $response): Response
     {
         //$pdo = $this->database->getPdo();
 
 
-        $webhook = new \SergiX44\Nutgram\RunningMode\Webhook(secretToken: $_ENV['TELEGRAM_SECRET_TOKEN']);
-
-        //$webhook->setSafeMode(true);
-
-        $this->bot->setRunningMode($webhook);
 
 
+        /* bot logic */
         $this->bot->onCommand('start', function(Nutgram $bot) {
             $bot->sendMessage('Введите запрос для поиска!');
         });
@@ -39,24 +38,39 @@ class Webhook extends BaseController
         $this->bot->onMessage(function (Nutgram $bot) {
 
 
-            $chatId = $bot->chatId();
+            $connection = $this->rabbitmqConnection;
 
-            $bot->sendMessage('You sent a message!' . 'chatId' . $chatId);
+            $channel = $connection->channel();
+
+
+            $message = [
+                'chat_id' => $bot->chatId(),
+                'text' => $bot->message()->text,
+            ];
+
+            $message = new AMQPMessage(json_encode($message));
+
+            $channel->basic_publish($message,'amq.direct','tg_search');
+
+            $channel->close();
+
+            $connection->close();
+
+            $bot->sendMessage('Ожидайте ваш запрос обрабатывается! Мы пришлём вам ответ в течение 1 минуты');
+
+
 
             $user = $bot->user();
 
-            $user = json_encode($user);
+            $data = json_encode($user);
 
             $path = __DIR__ . '/../../../var/telegram.log';
 
             $file = fopen($path, 'a',true);
-            fwrite($file, $user);
+            fwrite($file, $data . "\n");
             fclose($file);
 
-
         });
-
-
 
 
         $this->bot->run();

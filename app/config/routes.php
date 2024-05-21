@@ -9,5 +9,5 @@ use Slim\App;
 return static function (App $app): void {
     $app->get('/', [MainController::class, 'index']);
 
-    $app->post('/webhook',[Webhook::class, 'handle']);
+    $app->post('/webhook', Webhook::class);
 };

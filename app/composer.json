@@ -7,7 +7,8 @@
         "php-di/slim-bridge": "^3.4",
         "laminas/laminas-config-aggregator": "^1.15",
         "nutgram/nutgram": "^4.20",
-      "ext-pdo": "*"
+      "ext-pdo": "*",
+        "php-amqplib/php-amqplib": "^3.6"
     },
     "autoload": {
         "files":[
