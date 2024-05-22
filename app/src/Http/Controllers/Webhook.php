@@ -37,7 +37,6 @@ class Webhook extends BaseController
 
         $this->bot->onMessage(function (Nutgram $bot) {
 
-
             $connection = $this->rabbitmqConnection;
 
             $channel = $connection->channel();
@@ -52,11 +51,11 @@ class Webhook extends BaseController
 
             $channel->basic_publish($message,'amq.direct','tg_search');
 
+            $bot->sendMessage('Ожидайте ваш запрос обрабатывается! Мы пришлём вам ответ в течение 1 минуты');
+
             $channel->close();
 
             $connection->close();
-
-            $bot->sendMessage('Ожидайте ваш запрос обрабатывается! Мы пришлём вам ответ в течение 1 минуты');
 
 
 
