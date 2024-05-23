@@ -1,10 +1,14 @@
 <?php
 
+use Psr\Container\ContainerInterface;
 use Slim\App;
 use function App\env;
 
-/* @var App $app */
-$app = require __DIR__ . '/bin/App.php';
+
+/* @var ContainerInterface $container */
+$container = require __DIR__ . '/config/container.php';
+/*  @var App $app */
+$app = (require __DIR__ . '/config/app.php')($container);
 
 $pdoInstance = $app->getContainer()->get(PDO::class);
 
