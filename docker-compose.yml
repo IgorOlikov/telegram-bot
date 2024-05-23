@@ -40,6 +40,10 @@ services:
       volumes:
         - ./app:/app
       environment:
+        TELEGRAM_BOT_API_TOKEN: ${TELEGRAM_BOT_API_TOKEN}
+        APP_DEBUG: 1
+        RABBITMQ_DEFAULT_USER: admin
+        RABBITMQ_DEFAULT_PASS: admin
         POSTGRES_HOST: postgresql
         POSTGRES_USER: app
         POSTGRES_DB: app

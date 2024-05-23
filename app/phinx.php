@@ -6,7 +6,7 @@ use function App\env;
 /* @var App $app */
 $app = require __DIR__ . '/bin/App.php';
 
-dd($app);
+$pdoInstance = $app->getContainer()->get(PDO::class);
 
 return
 [
@@ -28,7 +28,7 @@ return
         ],
         'development' => [
             'name' => 'app',
-            'connection' => '',
+            'connection' => $pdoInstance,
             //'name' => env('POSTGRES_DB'),
             //'adapter' => 'pgsql',
             //'host' => env('POSTGRES_HOST'),
