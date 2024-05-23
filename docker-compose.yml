@@ -13,7 +13,7 @@ services:
       depends_on:
         - postgresql
 
-    php-fpm:
+    fpm:
       container_name: fpm
       build:
         context: docker
@@ -32,7 +32,7 @@ services:
       depends_on:
         - nginx
 
-    php-cli:
+    cli:
       container_name: cli
       build:
         context: docker
@@ -70,7 +70,6 @@ services:
       ports:
         - "5672:5672"
         - "15672:15672"
-
 
     worker:
       container_name: worker

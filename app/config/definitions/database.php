@@ -15,7 +15,8 @@ return [
         ->constructor(
             dsn: $dsn,
             username: env('POSTGRES_USER'),
-            password: env('POSTGRES_PASSWORD')
+            password: env('POSTGRES_PASSWORD'),
+            options: [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false]
         ),
 
     //Database::class => function (ContainerInterface $container) {

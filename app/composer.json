@@ -8,7 +8,8 @@
         "laminas/laminas-config-aggregator": "^1.15",
         "nutgram/nutgram": "^4.20",
       "ext-pdo": "*",
-        "php-amqplib/php-amqplib": "^3.6"
+        "php-amqplib/php-amqplib": "^3.6",
+        "robmorgan/phinx": "^0.16.0"
     },
     "autoload": {
         "files":[

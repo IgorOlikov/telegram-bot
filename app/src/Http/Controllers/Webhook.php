@@ -53,15 +53,12 @@ class Webhook extends BaseController
 
             $bot->sendMessage('Ожидайте ваш запрос обрабатывается! Мы пришлём вам ответ в течение 1 минуты');
 
-            $channel->close();
 
+            $channel->close();
             $connection->close();
 
 
-
-            $user = $bot->user();
-
-            $data = json_encode($user);
+            $data = json_encode(['user' => json_encode($bot->user()), 'chat_id' => $bot->chatId(), 'user_id' => $bot->userId()]);
 
             $path = __DIR__ . '/../../../var/telegram.log';
 
