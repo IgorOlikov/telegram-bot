@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Database\Database;
 use PDO;
 
-class UserRepository
+class ChatRepository
 {
 
     private PDO $pdo;
@@ -19,13 +19,14 @@ class UserRepository
 
     public function create(array $data): array
     {
-        $sql = 'insert into users (email, name, password) values (:email, :name, :password)';
+        $sql = 'insert into chats (id,username, first_name, last_name) values (:id,:username, :first_name, :last_name)';
 
         $stmt = $this->pdo->prepare($sql);
 
-        $stmt->bindValue(':email', $data['email']);
-        $stmt->bindValue(':name', $data['name']);
-        $stmt->bindValue(':password', $data['password']);
+        $stmt->bindValue(':id', (int)$data['id'], PDO::PARAM_INT);
+        $stmt->bindValue(':username', $data['username']);
+        $stmt->bindValue(':first_name', $data['first_name']);
+        $stmt->bindValue(':last_name', $data['last_name']);
 
         $stmt->execute();
 
@@ -36,22 +37,13 @@ class UserRepository
 
     public function findOrCreate(array $data): array
     {
-       $sql = 'select * from users where email = :email and name = :name';
+        $chat = $this->findById((int)$data['id']);
 
-       $stmt = $this->pdo->prepare($sql);
+        if ($chat) {
+            return $chat;
+        }
 
-       $stmt->bindValue(':email', $data['email']);
-       $stmt->bindValue(':name', $data['name']);
-
-       $stmt->execute();
-
-       $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-       if ($user) {
-           return $user;
-       }
-
-       return $this->create($data);
+        return $this->create($data);
     }
 
     public function findById(int $id): array
@@ -60,7 +52,7 @@ class UserRepository
 
         $stmt = $this->pdo->prepare($sql);
 
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
 
         $stmt->execute();
 

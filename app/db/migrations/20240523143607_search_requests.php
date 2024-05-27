@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-final class Users extends AbstractMigration
+final class SearchRequests extends AbstractMigration
 {
     /**
      * Change Method.
@@ -19,15 +19,15 @@ final class Users extends AbstractMigration
      */
     public function up(): void
     {
-           $table = $this->table('users');
+        $table = $this->table('search_requests');
 
-           $table
-               ->addColumn('email', 'string')
-               ->addColumn('name', 'string',['limit' => 15])
-               ->addColumn('password', 'string')
-               ->addTimestamps()
+        $table
+            ->addColumn('chat_id','integer',['null' => false])
+            ->addForeignKey('chat_id','chats','id',['delete' => 'CASCADE','update' => 'NO_ACTION'])
+            ->addColumn('search_request', 'string',['limit' => 255])
+            ->addTimestamps()
 
-               ->create();
+            ->create();
 
 
 
@@ -35,6 +35,6 @@ final class Users extends AbstractMigration
 
     public function down(): void
     {
-        $this->table('users')->drop()->save();
+        $this->table('search_requests')->drop()->save();
     }
 }

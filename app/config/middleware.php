@@ -8,6 +8,9 @@ use function App\env;
 
 
 return static function (App $app): void {
+
+
+
     $app->addBodyParsingMiddleware();
     $app->addErrorMiddleware((bool)env('APP_DEBUG'),true,true);
 };

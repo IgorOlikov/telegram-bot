@@ -1,9 +1,9 @@
-phinx fresh:
+db-fresh:
 	docker compose run --rm cli vendor/bin/phinx rollback -e development -t 0
 	docker compose run --rm cli vendor/bin/phinx migrate -e development
 
-phinx empty:
+db-empty:
 	docker compose run --rm cli vendor/bin/phinx rollback -e development -t 0
 
-phinx migrate:
+db-migrate:
 	docker compose run --rm cli vendor/bin/phinx -e development migrate

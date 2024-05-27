@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 
 return static function (App $app): void {
-    $app->get('/', [MainController::class, 'index']);
+    $app->get('/', [MainController::class, 'index']); //->add('csrf');
 
     $app->post('/webhook', Webhook::class);
 };
