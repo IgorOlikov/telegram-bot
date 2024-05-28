@@ -19,7 +19,7 @@ class ChatRepository
 
     public function create(array $data): array
     {
-        $sql = 'insert into chats (id,username, first_name, last_name) values (:id,:username, :first_name, :last_name)';
+        $sql = 'insert into chats (id, username, first_name, last_name) values (:id, :username, :first_name, :last_name)';
 
         $stmt = $this->pdo->prepare($sql);
 
@@ -30,14 +30,12 @@ class ChatRepository
 
         $stmt->execute();
 
-        $id = (int)$this->pdo->lastInsertId();
-
-        return $this->findById($id);
+        return $this->findById((int)$data['id']);
     }
 
     public function findOrCreate(array $data): array
     {
-        $chat = $this->findById((int)$data['id']);
+        $chat = $this->findById($data['id']);
 
         if ($chat) {
             return $chat;
@@ -46,9 +44,9 @@ class ChatRepository
         return $this->create($data);
     }
 
-    public function findById(int $id): array
+    public function findById(int $id): array|bool
     {
-        $sql = 'select * from users where id = :id';
+        $sql = 'select * from chats where id = :id';
 
         $stmt = $this->pdo->prepare($sql);
 
@@ -64,6 +62,32 @@ class ChatRepository
         $sql = 'select * from users';
 
         $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getChatRequests(int $chatId): array
+    {
+        $sql = 'select *,sr.search_request from chats join search_requests sr on chats.id = sr.chat_id where chats.id = :chat_id';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':chat_id', $chatId, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getChatResults(int $chatId): array
+    {
+        $sql = 'select *,sr.search_result from chats join search_results sr on chats.id = sr.chat_id where chats.id = :chat_id';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':chat_id', $chatId, PDO::PARAM_INT);
 
         $stmt->execute();
 

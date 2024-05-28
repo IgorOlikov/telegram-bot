@@ -19,10 +19,9 @@ final class Chats extends AbstractMigration
      */
     public function up(): void
     {
-        $table = $this->table('chats'); //['id' => false]
+        $table = $this->table('chats');
 
         $table
-            //->addColumn('id', 'integer', ['null' => false])
             ->addColumn('username', 'string')
             ->addColumn('first_name', 'string', ['null' => true]) //nullable
             ->addColumn('last_name', 'string', ['null' => true]) //nullable
